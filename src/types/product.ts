@@ -14,15 +14,17 @@ export interface QuantityOption {
   unit: QuantityUnit;
   price: number;
 }
-
+export interface ProductImage {
+  image: string; // ✅ this matches Django's API response structure
+}
 export interface Product {
   id: string;
   name: string;
   category: ProductCategory;
   description: string;
-  images: string[];
+  images: ProductImage[];
   quantities: QuantityOption[];
-  inStock: boolean;
+  in_stock: boolean;
   featured?: boolean;
 }
 

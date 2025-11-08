@@ -1,12 +1,32 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import BannerCarousel from "@/components/BannerCarousel";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/products";
 import { ArrowRight, Leaf, Shield, Truck } from "lucide-react";
+import axios from "axios";
 
 const Home = () => {
-  const featuredProducts = products.filter((p) => p.featured);
+  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "http://web-production-fe5b6.up.railway.app/api/products/?featured=true"
+        );
+        setFeaturedProducts(response.data);
+      } catch (error) {
+        console.error("Failed to fetch featured products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -67,11 +87,18 @@ const Home = () => {
             </Button>
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+
+        {loading ? (
+          <p className="text-center py-12">Loading featured products...</p>
+        ) : featuredProducts.length === 0 ? (
+          <p className="text-center py-12">No featured products found.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* CTA Section */}
@@ -81,7 +108,8 @@ const Home = () => {
             Experience Pure, Natural Goodness
           </h2>
           <p className="text-lg mb-8 opacity-90">
-            Join thousands of happy customers who trust us for their organic needs
+            Join thousands of happy customers who trust us for their organic
+            needs
           </p>
           <Link to="/products">
             <Button size="lg" variant="secondary">

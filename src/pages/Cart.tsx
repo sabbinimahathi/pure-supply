@@ -3,30 +3,72 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import { promoCodes } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 const Cart = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { items, removeItem, updateItemCount, promoCode, discount, applyPromoCode, removePromoCode, getTotalPrice, clearCart } = useCart();
+  const {
+    items,
+    removeItem,
+    updateItemCount,
+    promoCode,
+    discount,
+    applyPromoCode,
+    removePromoCode,
+    getTotalPrice,
+    clearCart,
+  } = useCart();
+
   const [promoInput, setPromoInput] = useState("");
 
-  const subtotal = items.reduce((total, item) => total + item.quantity.price * item.count, 0);
+  // Calculate subtotal
+  const subtotal = items.reduce(
+    (total, item) => total + item.quantity.price * item.count,
+    0
+  );
+
+  // Total after discount
   const total = getTotalPrice();
 
-  const handleApplyPromo = () => {
-    const code = promoCodes.find((c) => c.code === promoInput.toUpperCase() && c.active);
-    if (code) {
-      applyPromoCode(code.code, code.discount);
-      toast({
-        title: "Promo code applied!",
-        description: `You got ${code.discount}% discount`,
-      });
-      setPromoInput("");
-    } else {
+  // -----------------------------
+  // Validate promo code from Django
+  // -----------------------------
+  const handleApplyPromo = async () => {
+    if (!promoInput) return;
+
+    try {
+      const res = await axios.post(
+        "https://web-production-fe5b6.up.railway.app/api/promocodes/validate/",
+        {
+          code: promoInput.toUpperCase(),
+        }
+      );
+
+      if (res.data.valid) {
+        applyPromoCode(promoInput.toUpperCase(), res.data.discount);
+        toast({
+          title: "Promo code applied!",
+          description: `You got ${res.data.discount}% discount`,
+        });
+        setPromoInput("");
+      } else {
+        toast({
+          title: res.data.message || "Invalid promo code",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error(error);
       toast({
         title: "Invalid promo code",
         variant: "destructive",
@@ -34,12 +76,104 @@ const Cart = () => {
     }
   };
 
+  //   const handleCheckout = () => {
+  //     if (items.length === 0) return;
+
+  //     // Determine dynamic column widths
+  //     const nameWidth = Math.max(
+  //       "Product".length,
+  //       ...items.map((item) => item.product.name.length)
+  //     );
+  //     const qtyWidth = Math.max(
+  //       "Qty".length,
+  //       ...items.map(
+  //         (item) =>
+  //           `${item.quantity.value}${item.quantity.unit} x${item.count}`.length
+  //       )
+  //     );
+  //     const priceWidth = Math.max(
+  //       "Price".length,
+  //       ...items.map((item) => `₹${item.quantity.price * item.count}`.length)
+  //     );
+
+  //     const repeat = (char, count) => char.repeat(count);
+
+  //     // Table header
+  //     const header = `┌${repeat("─", nameWidth + 2)}┬${repeat(
+  //       "─",
+  //       qtyWidth + 2
+  //     )}┬${repeat("─", priceWidth + 2)}┐
+  // │ ${"Product".padEnd(nameWidth)} │ ${"Qty".padEnd(qtyWidth)} │ ${"Price".padEnd(
+  //       priceWidth
+  //     )} │
+  // ├${repeat("─", nameWidth + 2)}┼${repeat("─", qtyWidth + 2)}┼${repeat(
+  //       "─",
+  //       priceWidth + 2
+  //     )}┤`;
+
+  //     // Table rows
+  //     const rows = items
+  //       .map((item) => {
+  //         const productName = item.product.name.padEnd(nameWidth, " ");
+  //         const quantity =
+  //           `${item.quantity.value}${item.quantity.unit} x${item.count}`.padEnd(
+  //             qtyWidth,
+  //             " "
+  //           );
+  //         const price = `₹${item.quantity.price * item.count}`.padEnd(
+  //           priceWidth,
+  //           " "
+  //         );
+  //         return `│ ${productName} │ ${quantity} │ ${price} │`;
+  //       })
+  //       .join("\n");
+
+  //     // Table footer
+  //     const footer = `└${repeat("─", nameWidth + 2)}┴${repeat(
+  //       "─",
+  //       qtyWidth + 2
+  //     )}┴${repeat("─", priceWidth + 2)}┘`;
+
+  //     // Only show discount if applied
+  //     const extraInfo = promoCode ? `Discount Applied: -${discount}%` : "";
+
+  //     // Wrap entire table in triple backticks for monospace in WhatsApp
+  //     const message = `Hello! I would like to order:\n\n\`\`\`
+  // ${header}
+  // ${rows}
+  // ${footer}\`\`\`${
+  //       extraInfo ? `\n\n${extraInfo}` : ""
+  //     }\n\nTotal: ₹${total.toFixed(2)}`;
+
+  //     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  //     window.open(whatsappUrl, "_blank");
+  //   };
   const handleCheckout = () => {
     if (items.length === 0) return;
 
-    const message = `Hello! I would like to order:\n\n${items
-      .map((item) => `${item.product.name} (${item.quantity.value}${item.quantity.unit}) x ${item.count} = ₹${item.quantity.price * item.count}`)
-      .join("\n")}\n\nSubtotal: ₹${subtotal}${promoCode ? `\nPromo Code: ${promoCode} (-${discount}%)` : ""}\n\nTotal: ₹${total.toFixed(2)}`;
+    // Calculate total
+    const totalAmount = items.reduce(
+      (sum, item) => sum + item.quantity.price * item.count,
+      0
+    );
+
+    // Build order lines
+    const orderLines = items
+      .map((item, index) => {
+        const name = item.product.name;
+        const qty = `${item.quantity.value}${item.quantity.unit} x${item.count}`;
+        const price = `₹${item.quantity.price * item.count}`;
+        return `${index + 1}. *${name}*\n   Qty: ${qty}\n   Price: ${price}`;
+      })
+      .join("\n\n");
+
+    // Discount info (optional)
+    const discountInfo = promoCode ? `\nDiscount Applied: -${discount}%` : "";
+
+    // Final WhatsApp message
+    const message = `Hello! I would like to order:\n\n${orderLines}${discountInfo}\n\n*Total:* ₹${totalAmount.toFixed(
+      2
+    )}`;
 
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
@@ -51,7 +185,9 @@ const Cart = () => {
         <div className="text-center">
           <ShoppingBag className="h-24 w-24 mx-auto text-muted-foreground mb-4" />
           <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
-          <p className="text-muted-foreground mb-6">Add some products to get started!</p>
+          <p className="text-muted-foreground mb-6">
+            Add some products to get started!
+          </p>
           <Button onClick={() => navigate("/products")}>Browse Products</Button>
         </div>
       </div>
@@ -71,12 +207,14 @@ const Cart = () => {
                 <CardContent className="p-6">
                   <div className="flex gap-4">
                     <img
-                      src={item.product.images[0]}
+                      src={item.product.images[0]?.image}
                       alt={item.product.name}
                       className="w-24 h-24 object-cover rounded"
                     />
                     <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-1">{item.product.name}</h3>
+                      <h3 className="font-semibold text-lg mb-1">
+                        {item.product.name}
+                      </h3>
                       <p className="text-sm text-muted-foreground mb-2">
                         {item.quantity.value}
                         {item.quantity.unit}
@@ -87,7 +225,11 @@ const Cart = () => {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() =>
-                            updateItemCount(item.product.id, item.quantity.value, item.count - 1)
+                            updateItemCount(
+                              item.product.id,
+                              item.quantity.value,
+                              item.count - 1
+                            )
                           }
                         >
                           <Minus className="h-4 w-4" />
@@ -98,7 +240,11 @@ const Cart = () => {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() =>
-                            updateItemCount(item.product.id, item.quantity.value, item.count + 1)
+                            updateItemCount(
+                              item.product.id,
+                              item.quantity.value,
+                              item.count + 1
+                            )
                           }
                         >
                           <Plus className="h-4 w-4" />
@@ -106,11 +252,15 @@ const Cart = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-lg mb-2">₹{item.quantity.price * item.count}</p>
+                      <p className="font-bold text-lg mb-2">
+                        ₹{item.quantity.price * item.count}
+                      </p>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeItem(item.product.id, item.quantity.value)}
+                        onClick={() =>
+                          removeItem(item.product.id, item.quantity.value)
+                        }
                       >
                         <Trash2 className="h-4 w-4 text-destructive" />
                       </Button>
@@ -143,7 +293,12 @@ const Cart = () => {
                 <div className="border-t pt-4">
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
-                    <span>₹{total.toFixed(2)}</span>
+                    <span>
+                      ₹
+                      {promoCode
+                        ? (subtotal * (1 - discount / 100)).toFixed(2)
+                        : total.toFixed(2)}
+                    </span>
                   </div>
                 </div>
 
@@ -155,11 +310,19 @@ const Cart = () => {
                     disabled={!!promoCode}
                   />
                   {promoCode ? (
-                    <Button variant="outline" className="w-full" onClick={removePromoCode}>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={removePromoCode}
+                    >
                       Remove Promo Code
                     </Button>
                   ) : (
-                    <Button variant="outline" className="w-full" onClick={handleApplyPromo}>
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={handleApplyPromo}
+                    >
                       Apply Code
                     </Button>
                   )}
@@ -169,7 +332,11 @@ const Cart = () => {
                 <Button className="w-full" size="lg" onClick={handleCheckout}>
                   Checkout via WhatsApp
                 </Button>
-                <Button variant="ghost" className="w-full" onClick={() => navigate("/products")}>
+                <Button
+                  variant="ghost"
+                  className="w-full"
+                  onClick={() => navigate("/products")}
+                >
                   Continue Shopping
                 </Button>
               </CardFooter>

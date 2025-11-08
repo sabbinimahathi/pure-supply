@@ -88,3 +88,7 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+strong {
+  @apply text-green-700;
+}

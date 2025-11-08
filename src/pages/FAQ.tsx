@@ -8,44 +8,65 @@ import {
 const FAQ = () => {
   const faqs = [
     {
-      question: "Are all your products certified organic?",
-      answer: "Yes, all our products are 100% certified organic. We source directly from certified organic farms and ensure rigorous quality checks throughout our supply chain.",
+      question: "What are cold-pressed oils?",
+      answer:
+        "Cold-pressed oils are extracted using a traditional wooden press (Marachekku/Ghani) at low temperatures. This natural method helps retain the oil’s original aroma, nutrients, and antioxidants, unlike refined oils which are made using heat and chemicals.",
     },
     {
-      question: "How do I place an order?",
-      answer: "Browse our products, add items to your cart, and proceed to checkout. You'll be redirected to WhatsApp where you can complete your order with our team.",
+      question: "Are Pure Supply oils organic?",
+      answer:
+        "Our oils are naturally extracted and completely free from chemicals and preservatives, but we do not claim them to be certified organic. We focus on offering oils that are 100% natural and chemical-free, made through traditional cold-press methods.",
     },
     {
-      question: "What are your delivery areas?",
-      answer: "We currently deliver across major cities in India. Delivery times vary based on your location, typically ranging from 3-7 business days.",
+      question:
+        "What makes Pure Supply oils different from refined or market oils?",
+      answer:
+        "We use high-quality seeds, process them through wooden cold presses, and filter them naturally without adding chemicals. The result is a pure, nutrient-rich oil that retains its natural color, aroma, and flavor.",
     },
     {
-      question: "How do promo codes work?",
-      answer: "Enter your promo code at checkout to receive discounts on your order. Promo codes have specific terms and validity periods. Check our announcements for current offers.",
+      question: "Why does cold-pressed oil have sediments at the bottom?",
+      answer:
+        "Sedimentation is a natural sign of authenticity. It happens because our oils are naturally extracted and only filtered, not refined or chemically processed. This ensures you get oil in its purest form.",
     },
     {
-      question: "What is your return policy?",
-      answer: "We offer returns within 7 days of delivery if the product is unused and in original packaging. For damaged or defective products, please contact us immediately with photos.",
+      question: "How should I store cold-pressed oils?",
+      answer:
+        "Store your oil in a cool, dry place away from direct sunlight. Use airtight glass or steel containers to preserve freshness and prevent oxidation.",
     },
     {
-      question: "How should I store the products?",
-      answer: "Store oils and ghee in a cool, dry place away from direct sunlight. Dry fruits and seeds should be kept in airtight containers. Refer to individual product labels for specific storage instructions.",
+      question: "What other products do you offer besides cold-pressed oils?",
+      answer:
+        "Along with cold-pressed oils, we offer A2 Gir Cow Ghee, premium dry fruits, nutritious millets, freshly ground spices, and healthy rice varieties like Single Polish and HMT rice, directly sourced from trusted farmers.",
     },
     {
-      question: "What is A2 Gir Cow Ghee?",
-      answer: "A2 ghee is made from the milk of indigenous Gir cows, which produces A2 beta-casein protein. It's easier to digest and made using traditional bilona method for maximum nutritional benefits.",
+      question: "Are your oils suitable for all types of cooking?",
+      answer:
+        "Absolutely! Our oils can be used for deep frying, sautéing, salad dressings, skincare, and traditional uses — depending on the oil type. Each oil retains its natural flavor and health benefits.",
     },
     {
-      question: "Do you offer bulk discounts?",
-      answer: "Yes, we offer special prices for bulk orders. Please contact us via WhatsApp with your requirements for a custom quote.",
+      question: "What is the customer feedback on your products?",
+      answer:
+        "We are proud to have maintained a 4.8/5 Google rating for over 7 years since our inception, reflecting the trust and satisfaction of thousands of happy customers.",
     },
     {
-      question: "Are your products suitable for cooking?",
-      answer: "Absolutely! Our cold-pressed oils, ghee, and spices are perfect for cooking. They retain their natural nutrients and flavors, making your meals healthier and tastier.",
+      question: "How can I trust the purity of your products?",
+      answer:
+        "Our 90% repeat customer rate since 2018 is our strongest proof of quality. Every product is prepared in small batches, carefully checked, and naturally processed to deliver pure, fresh, and honest food products to your home.",
     },
     {
       question: "How can I track my order?",
-      answer: "After placing your order via WhatsApp, our team will provide you with tracking information and updates throughout the delivery process.",
+      answer:
+        "After placing your order via WhatsApp, our team will provide you with tracking information and updates throughout the delivery process.",
+    },
+    {
+      question: "How do promo codes work?",
+      answer:
+        "Enter your promo code at checkout to receive discounts on your order. Promo codes have specific terms and validity periods. Check our announcements for current offers.",
+    },
+    {
+      question: "Do you deliver across India?",
+      answer:
+        "Yes, we have PAN-India delivery with applicable postal charges. We also offer free delivery within the west part of Hyderabad — with no minimum order quantity.",
     },
   ];
 
