@@ -96,7 +96,7 @@ const BannerCarousel = () => {
         setLoading(true);
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
         const response = await axios.get(`${apiBaseUrl}/api/banners/`);
-        setBanners(response.data);
+        setBanners(response.data.results);
       } catch (error) {
         console.error("Failed to fetch banners", error);
       } finally {

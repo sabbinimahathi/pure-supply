@@ -18,7 +18,7 @@ const Home = () => {
         const response = await axios.get(
           `${apiBaseUrl}/api/products/?featured=true`
         );
-        setFeaturedProducts(response.data);
+        setFeaturedProducts(response.data.results);
       } catch (error) {
         console.error("Failed to fetch featured products", error);
       } finally {
