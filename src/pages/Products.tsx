@@ -154,7 +154,7 @@ const Products = () => {
       try {
         setLoading(true);
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-        const res = await fetch(`${apiBaseUrl}api/products/`);
+        const res = await fetch(`${apiBaseUrl}/api/products/`);
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
 
