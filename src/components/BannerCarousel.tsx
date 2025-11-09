@@ -6,7 +6,7 @@
 // interface Banner {
 //   id: number;
 //   image: string;
-//   link?: string; // optional if you want banners clickable
+//   link?: string;
 // }
 
 // const BannerCarousel = () => {
@@ -31,7 +31,6 @@
 //     fetchBanners();
 //   }, []);
 
-//   // Auto-slide every 5 seconds
 //   useEffect(() => {
 //     if (banners.length === 0) return;
 
@@ -55,7 +54,7 @@
 //     return <p className="text-center py-12">No banners found.</p>;
 
 //   return (
-//     <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-lg">
+//     <div className="relative w-full h-[250px] sm:h-[350px] md:h-[500px] overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
 //       {banners.map((banner, index) => (
 //         <div
 //           key={banner.id}
@@ -66,11 +65,12 @@
 //           <img
 //             src={banner.image}
 //             alt={`Banner ${index + 1}`}
-//             className="w-full h-full object-contain"
+//             className="w-full h-full object-contain sm:object-contain md:object-contain"
 //           />
 //         </div>
 //       ))}
 
+//       {/* Navigation Buttons */}
 //       <Button
 //         variant="ghost"
 //         size="icon"
@@ -89,6 +89,7 @@
 //         <ChevronRight className="h-6 w-6" />
 //       </Button>
 
+//       {/* Pagination Dots */}
 //       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
 //         {banners.map((_, index) => (
 //           <button
@@ -172,28 +173,36 @@ const BannerCarousel = () => {
           <img
             src={banner.image}
             alt={`Banner ${index + 1}`}
-            className="w-full h-full object-contain sm:object-contain md:object-contain"
+            className="w-full h-full object-contain"
           />
         </div>
       ))}
 
-      {/* Navigation Buttons */}
+      {/* Smaller, Transparent Navigation Buttons */}
       <Button
         variant="ghost"
         size="icon"
         onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+        className="absolute left-3 top-1/2 -translate-y-1/2
+                   h-8 w-8 rounded-full
+                   bg-white/10 backdrop-blur-sm border border-white/20
+                   text-white hover:bg-white/20 hover:scale-105
+                   transition-all duration-300 shadow-sm"
       >
-        <ChevronLeft className="h-6 w-6" />
+        <ChevronLeft className="h-4 w-4" />
       </Button>
 
       <Button
         variant="ghost"
         size="icon"
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+        className="absolute right-3 top-1/2 -translate-y-1/2
+                   h-8 w-8 rounded-full
+                   bg-white/10 backdrop-blur-sm border border-white/20
+                   text-white hover:bg-white/20 hover:scale-105
+                   transition-all duration-300 shadow-sm"
       >
-        <ChevronRight className="h-6 w-6" />
+        <ChevronRight className="h-4 w-4" />
       </Button>
 
       {/* Pagination Dots */}
@@ -203,7 +212,9 @@ const BannerCarousel = () => {
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`w-2 h-2 rounded-full transition-all ${
-              index === currentIndex ? "bg-primary w-8" : "bg-background/50"
+              index === currentIndex
+                ? "bg-white w-6 shadow-md"
+                : "bg-white/40 hover:bg-white/60"
             }`}
           />
         ))}
