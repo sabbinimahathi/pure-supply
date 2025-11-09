@@ -146,34 +146,83 @@ const Cart = () => {
   //     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
   //     window.open(whatsappUrl, "_blank");
   //   };
-  const handleCheckout = () => {
-    if (items.length === 0) return;
+  // const handleCheckout = () => {
+  //   if (items.length === 0) return;
 
-    // Calculate total
-    const totalAmount = items.reduce(
-      (sum, item) => sum + item.quantity.price * item.count,
+  //   // Calculate total
+  //   const totalAmount = items.reduce(
+  //     (sum, item) => sum + item.quantity.price * item.count,
+  //     0
+  //   );
+
+  //   // Build order lines
+  //   const orderLines = items
+  //     .map((item, index) => {
+  //       const name = item.product.name;
+  //       const qty = `${item.quantity.value}${item.quantity.unit} x${item.count}`;
+  //       const price = `₹${item.quantity.price * item.count}`;
+  //       return `${index + 1}. *${name}*\n   Qty: ${qty}\n   Price: ${price}`;
+  //     })
+  //     .join("\n\n");
+
+  //   // Discount info (optional)
+  //   const discountInfo = promoCode ? `\nDiscount Applied: -${discount}%` : "";
+
+  //   // Final WhatsApp message
+  //   const message = `Hello! I would like to order:\n\n${orderLines}${discountInfo}\n\n*Total:* ₹${totalAmount.toFixed(
+  //     2
+  //   )}`;
+
+  //   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  //   window.open(whatsappUrl, "_blank");
+  // };
+  const handleCheckout = () => {
+    // ✅ If cart is empty, show toast
+    if (items.length === 0) {
+      toast({
+        title: "Your cart is empty!",
+        description: "Add some products to order via WhatsApp.",
+      });
+      return;
+    }
+
+    // Calculate subtotal
+    const subtotal = items.reduce(
+      (total, item) => total + item.quantity.price * item.count,
       0
     );
 
-    // Build order lines
+    // Total after promo
+    const totalAmount = getTotalPrice();
+
+    // Build WhatsApp order lines
     const orderLines = items
-      .map((item, index) => {
-        const name = item.product.name;
-        const qty = `${item.quantity.value}${item.quantity.unit} x${item.count}`;
-        const price = `₹${item.quantity.price * item.count}`;
-        return `${index + 1}. *${name}*\n   Qty: ${qty}\n   Price: ${price}`;
-      })
+      .map(
+        (item, index) =>
+          `${index + 1}. *${item.product.name}*\n   Qty: ${
+            item.quantity.value
+          }${item.quantity.unit} x ${item.count}\n   Price: ₹${
+            item.quantity.price * item.count
+          }`
+      )
       .join("\n\n");
 
-    // Discount info (optional)
-    const discountInfo = promoCode ? `\nDiscount Applied: -${discount}%` : "";
+    // Promo/discount info
+    const discountInfo = promoCode
+      ? `\nPromo Code: ${promoCode} (-${discount}%)`
+      : "";
 
     // Final WhatsApp message
-    const message = `Hello! I would like to order:\n\n${orderLines}${discountInfo}\n\n*Total:* ₹${totalAmount.toFixed(
+    const message = `Hello! I would like to order:\n\n${orderLines}${discountInfo}\n\n*Subtotal:* ₹${subtotal}\n*Total:* ₹${totalAmount.toFixed(
       2
     )}`;
 
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    // WhatsApp URL (replace number with your WhatsApp)
+    const phoneNumber = "919705947947"; // your WhatsApp number
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+
     window.open(whatsappUrl, "_blank");
   };
 
