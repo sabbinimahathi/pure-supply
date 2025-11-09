@@ -158,7 +158,7 @@ const Products = () => {
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
 
-        const mapped: Product[] = data.map((p: any) => ({
+        const mapped: Product[] = data.results.map((p: any) => ({
           id: p.id.toString(),
           name: p.name,
           category: p.category.slug,
