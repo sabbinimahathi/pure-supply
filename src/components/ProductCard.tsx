@@ -137,7 +137,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </p>
 
         {/* Size Dropdown + Price */}
-        <div className="flex items-center justify-between gap-2 mt-1">
+        <div
+          className="flex items-center justify-between gap-2 mt-1"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Select
             value={`${selectedQuantity.value}${selectedQuantity.unit}`}
             onValueChange={(value) => {
