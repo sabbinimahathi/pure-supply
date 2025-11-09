@@ -158,16 +158,30 @@ const Products = () => {
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
 
-        const mapped: Product[] = data.results.map((p: any) => ({
-          id: p.id.toString(),
-          name: p.name,
-          category: p.category.slug,
-          description: p.description,
-          featured: p.featured,
-          in_stock: p.in_stock,
-          images: p.images.map((img: any) => ({ image: img.image })),
-          quantities: p.quantities,
-        }));
+        // const mapped: Product[] = data.results.map((p: any) => ({
+        //   id: p.id.toString(),
+        //   name: p.name,
+        //   category: p.category.slug,
+        //   description: p.description,
+        //   featured: p.featured,
+        //   in_stock: p.in_stock,
+        //   images: p.images.map((img: any) => ({ image: img.image })),
+        //   quantities: p.quantities,
+        // }));
+        const mapped: Product[] = Array.isArray(data.results)
+          ? data.results.map((p: any) => ({
+              id: p.id?.toString() || "0",
+              name: p.name || "Untitled",
+              category: p.category?.slug || "uncategorized",
+              description: p.description || "",
+              featured: p.featured || false,
+              in_stock: p.in_stock || false,
+              images: Array.isArray(p.images)
+                ? p.images.map((img: any) => ({ image: img.image || "" }))
+                : [],
+              quantities: Array.isArray(p.quantities) ? p.quantities : [],
+            }))
+          : [];
 
         setProducts(mapped);
       } catch (err: any) {
@@ -189,7 +203,7 @@ const Products = () => {
         const res = await fetch(`${apiBaseUrl}/api/categories/`);
         if (!res.ok) throw new Error("Failed to fetch categories");
         const data = await res.json();
-        setCategories(data);
+        setCategories(Array.isArray(data.results) ? data.results : []);
       } catch (err: any) {
         console.error(err);
       }
