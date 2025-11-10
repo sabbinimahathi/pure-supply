@@ -208,7 +208,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const increment = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!product || !selectedQuantity) return;
     addItem(product, selectedQuantity);
     setCartQty((prev) => prev + 1);
   };
@@ -227,15 +226,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
     <motion.div
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.25 }}
-      className="cursor-pointer"
+      className="cursor-pointer w-[95%] mx-auto"
     >
       <Card
-        className="h-full overflow-hidden border border-green-200 
-                   hover:border-green-500/70 hover:shadow-[0_4px_20px_rgba(34,197,94,0.15)]
+        className="overflow-hidden border border-green-200 
+                   hover:border-green-500/70 hover:shadow-[0_4px_15px_rgba(34,197,94,0.1)]
                    transition-all duration-300 rounded-xl bg-white"
         onClick={() => navigate(`/product/${product.id}`)}
       >
-        {/* 🖼 Product Image */}
+        {/* Product Image */}
         <div className="relative aspect-[1/1.1] overflow-hidden">
           <img
             src={product.images[0]?.image}
@@ -254,8 +253,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </div>
 
-        {/* 📄 Product Info */}
-        <CardContent className="p-3 sm:p-4 flex flex-col gap-1.5">
+        {/* Product Info */}
+        <CardContent className="p-2 sm:p-3 flex flex-col gap-1.5">
           <h3 className="font-semibold text-sm sm:text-base line-clamp-1 text-green-800">
             {product.name}
           </h3>
@@ -265,7 +264,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           {/* Quantity + Price */}
           <div
-            className="flex items-center justify-between gap-2 mt-1"
+            className="flex items-center justify-between gap-1 mt-1"
             onClick={(e) => e.stopPropagation()}
           >
             <Select
@@ -293,22 +292,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </SelectContent>
             </Select>
 
-            <span className="text-sm sm:text-lg font-bold text-green-700">
+            <span className="text-sm sm:text-base font-bold text-green-700">
               ₹{selectedQuantity.price}
             </span>
           </div>
         </CardContent>
 
-        {/* 🛒 Add to Cart / Quantity Controls */}
-        <CardFooter className="px-3 pb-3 sm:px-4 sm:pb-4">
+        {/* Add to Cart / Quantity Controls */}
+        <CardFooter className="px-2 pb-2 sm:px-3 sm:pb-3">
           {cartQty === 0 ? (
             <Button
               className="w-full flex items-center justify-center gap-1 sm:gap-2 
-                         bg-green-600 hover:bg-green-700 text-white text-sm sm:text-base py-2 sm:py-2.5"
+                         bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm py-2 sm:py-2.5"
               disabled={!product.in_stock}
               onClick={handleAddToCart}
             >
-              <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" /> Add
+              <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" /> Add to Cart
             </Button>
           ) : (
             <div className="flex items-center justify-between w-full">
@@ -316,20 +315,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 variant="outline"
                 size="sm"
                 onClick={decrement}
-                className="border-green-400 text-green-700 hover:bg-green-100 w-8 h-8 sm:w-9 sm:h-9"
+                className="border-green-400 text-green-700 hover:bg-green-100 w-7 h-7 sm:w-9 sm:h-9"
               >
-                <Minus className="h-4 w-4" />
+                <Minus className="h-3.5 w-3.5" />
               </Button>
-              <span className="text-sm sm:text-lg font-semibold text-green-700">
+              <span className="text-sm sm:text-base font-semibold text-green-700">
                 {cartQty}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={increment}
-                className="border-green-400 text-green-700 hover:bg-green-100 w-8 h-8 sm:w-9 sm:h-9"
+                className="border-green-400 text-green-700 hover:bg-green-100 w-7 h-7 sm:w-9 sm:h-9"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-3.5 w-3.5" />
               </Button>
             </div>
           )}
