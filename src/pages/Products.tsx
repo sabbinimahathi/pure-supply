@@ -170,7 +170,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/types/product";
-import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
 interface Category {
@@ -249,14 +248,14 @@ const Products = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* 🌿 Hero Section */}
-      <section className="bg-green-50 py-12 text-center">
+      <section className="bg-gradient-to-r from-green-50 to-green-100 py-12 text-center">
         <div className="container">
           <h1 className="font-serif text-4xl font-bold mb-4 text-green-800">
             Our Products
           </h1>
-          <p className="text-lg text-green-600">
+          <p className="text-lg text-green-700">
             Explore our range of premium, eco-friendly organic products 🌱
           </p>
         </div>
@@ -271,10 +270,10 @@ const Products = () => {
             placeholder="Search for products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-full border border-green-200 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 shadow-sm placeholder:text-gray-400"
+            className="w-full pl-12 pr-4 py-3 rounded-full border border-green-300 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 shadow-sm placeholder:text-gray-400"
           />
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-green-600"
             size={20}
           />
         </div>
@@ -292,11 +291,11 @@ const Products = () => {
                 whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedCategory(category.slug)}
-                className={`px-5 py-2.5 rounded-full font-medium border transition-all duration-300
+                className={`px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-md backdrop-blur-sm
                   ${
                     isActive
-                      ? "bg-green-600 text-white border-green-700 shadow-lg shadow-green-200"
-                      : "bg-white text-green-700 border-green-400 hover:bg-green-100"
+                      ? "bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-700 shadow-green-300 hover:shadow-green-400 hover:brightness-105"
+                      : "bg-white text-green-800 border border-green-400 hover:bg-green-50 hover:text-green-700"
                   }
                 `}
               >
@@ -316,11 +315,16 @@ const Products = () => {
             <p className="text-gray-500">No products match your search.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
             {filteredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </motion.div>
         )}
       </section>
     </div>
