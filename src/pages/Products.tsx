@@ -270,8 +270,9 @@ const Products = () => {
             placeholder="Search for products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-full border border-green-700 focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 shadow-sm placeholder:text-gray-400"
+            className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-green-600 focus:ring-2 focus:ring-green-500 focus:border-green-700 transition-all duration-300 shadow-sm placeholder:text-gray-400"
           />
+
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-green-600"
             size={20}
