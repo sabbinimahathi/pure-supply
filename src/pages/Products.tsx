@@ -270,11 +270,11 @@ const Products = () => {
             placeholder="Search for products..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 rounded-full border-[5px] border-green-600 focus:ring-2 focus:ring-green-700 focus:border-green-900 transition-all duration-300 shadow-md placeholder:text-gray-400"
+            className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-green-600 focus:ring-2 focus:ring-green-500 focus:border-green-700 transition-all duration-300 shadow-sm placeholder:text-gray-400"
           />
 
           <Search
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-green-800"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-green-600"
             size={20}
           />
         </div>
@@ -292,13 +292,13 @@ const Products = () => {
                 whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedCategory(category.slug)}
-                className={`px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-md backdrop-blur-sm
-                  ${
-                    isActive
-                      ? "bg-gradient-to-r from-green-500 to-green-600 text-white border border-green-700 shadow-green-300 hover:shadow-green-400 hover:brightness-105"
-                      : "bg-white text-green-800 border border-green-400 hover:bg-green-50 hover:text-green-700"
-                  }
-                `}
+                className={`px-5 py-2.5 rounded-full font-medium transition-all duration-300 shadow-md backdrop-blur-sm border-2
+          ${
+            isActive
+              ? "bg-gradient-to-r from-green-600 to-green-700 text-white border-green-800 shadow-green-300 hover:shadow-green-400 hover:brightness-105"
+              : "bg-white text-green-800 border-green-600 hover:bg-green-50 hover:text-green-700"
+          }
+        `}
               >
                 {category.name}
               </motion.button>
