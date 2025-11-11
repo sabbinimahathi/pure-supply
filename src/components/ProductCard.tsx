@@ -229,8 +229,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className="cursor-pointer w-[95%] mx-auto"
     >
       <Card
-        className="overflow-hidden border border-green-200 
-                   hover:border-green-500/70 hover:shadow-[0_4px_15px_rgba(34,197,94,0.1)]
+        className="overflow-hidden border border-green-700 
+                   hover:border-green-400 hover:shadow-[0_4px_15px_rgba(34,197,94,0.1)]
                    transition-all duration-300 rounded-xl bg-white"
         onClick={() => navigate(`/product/${product.id}`)}
       >
