@@ -546,21 +546,6 @@ const ProductDetail = () => {
                   </Button>
                 </div>
               )}
-
-              {/* Additional Info */}
-              {product.in_stock && (
-                <div className="flex flex-col gap-2 text-xs sm:text-sm text-gray-600">
-                  <p className="flex items-center gap-2">
-                    ✓ Free delivery on orders above ₹500
-                  </p>
-                  <p className="flex items-center gap-2">
-                    ✓ Cash on Delivery available
-                  </p>
-                  <p className="flex items-center gap-2">
-                    ✓ Easy 7-day return policy
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>

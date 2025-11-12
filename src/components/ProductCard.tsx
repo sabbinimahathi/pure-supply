@@ -221,14 +221,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
     }
   };
 
-  // Calculate discount percentage
-  const discountPercentage = selectedQuantity.mrp
-    ? Math.round(
-        ((selectedQuantity.mrp - selectedQuantity.price) /
-          selectedQuantity.mrp) *
-          100
-      )
-    : 0;
+  // Calculate discount percentage - using nullish coalescing and proper null checks
+  const discountPercentage =
+    selectedQuantity?.mrp && selectedQuantity.mrp > selectedQuantity.price
+      ? Math.round(
+          ((selectedQuantity.mrp - selectedQuantity.price) /
+            selectedQuantity.mrp) *
+            100
+        )
+      : 0;
 
   return (
     <motion.div
@@ -278,7 +279,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           {/* Quantity + Price */}
           <div
-            className="flex items-center justify-between gap-2 mt-1"
+            className="flex items-start justify-between gap-2 mt-1"
             onClick={(e) => e.stopPropagation()}
           >
             <Select
@@ -290,7 +291,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 if (qty) setSelectedQuantity(qty);
               }}
             >
-              <SelectTrigger className="w-20 h-7 text-xs sm:w-24 sm:h-8 sm:text-sm border-green-300 focus:ring-green-500">
+              <SelectTrigger className="w-20 h-7 text-xs sm:w-24 sm:h-8 sm:text-sm border-green-300 focus:ring-green-500 flex-shrink-0">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="w-24">
@@ -306,19 +307,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </SelectContent>
             </Select>
 
-            {/* Price Display with MRP */}
-            <div className="flex flex-col items-end gap-0.5">
-              <div className="flex items-center gap-1.5 sm:gap-2">
-                {selectedQuantity.mrp &&
-                  selectedQuantity.mrp > selectedQuantity.price && (
-                    <span className="text-xs sm:text-sm text-gray-500 line-through decoration-red-500 decoration-2">
-                      ₹{selectedQuantity.mrp}
-                    </span>
-                  )}
-                <span className="text-sm sm:text-base font-bold text-green-700">
-                  ₹{selectedQuantity.price}
-                </span>
-              </div>
+            {/* Price Display with MRP - Fixed layout for mobile */}
+            <div className="flex flex-col items-end gap-0.5 min-w-0 flex-1">
+              {/* MRP with strikethrough */}
+              {selectedQuantity?.mrp &&
+                selectedQuantity.mrp > selectedQuantity.price && (
+                  <span className="text-[10px] sm:text-xs text-gray-500 line-through decoration-red-500 decoration-1 sm:decoration-2 whitespace-nowrap">
+                    ₹{selectedQuantity.mrp}
+                  </span>
+                )}
+              {/* Selling Price */}
+              <span className="text-sm sm:text-base font-bold text-green-700 whitespace-nowrap">
+                ₹{selectedQuantity.price}
+              </span>
             </div>
           </div>
         </CardContent>
