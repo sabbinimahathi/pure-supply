@@ -11,8 +11,9 @@ const Footer = () => {
               Pure Supply
             </h3>
             <p className="text-sm text-muted-foreground">
-              Premium organic products sourced naturally and sustainably for
-              your healthy lifestyle.
+              Pure Supply is a premium shop offering wood cold-pressed oils, A2
+              Gir Cow Ghee, premium dry fruits, spices, raw rice, and more — all
+              naturally pure and chemical-free.
             </p>
           </div>
 
@@ -72,22 +73,16 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://www.facebook.com/share/16WQJEg3hB/"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/puresupply_hyd?igsh=MTU3NDU3Ym1wZDUxaw=="
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Twitter className="h-5 w-5" />
               </a>
             </div>
           </div>

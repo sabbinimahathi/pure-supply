@@ -358,6 +358,7 @@ const Contact = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">+91 9705947947</p>
+                <p className="text-muted-foreground">+91 9852357357</p>
               </CardContent>
             </Card>
 
@@ -368,7 +369,7 @@ const Contact = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">contact@puresupply.com</p>
+                <p className="text-muted-foreground">puresupply7@gmail.com</p>
               </CardContent>
             </Card>
 
@@ -396,9 +397,8 @@ const Contact = () => {
             <div className="bg-primary text-primary-foreground p-6 rounded-lg">
               <h3 className="font-semibold text-lg mb-2">Business Hours</h3>
               <p className="text-sm opacity-90">
-                Monday - Saturday: 9:00 AM - 6:00 PM
+                Sunday - Saturday: 9:00 AM - 6:00 PM
               </p>
-              <p className="text-sm opacity-90">Sunday: Closed</p>
             </div>
           </div>
         </div>
