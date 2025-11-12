@@ -221,12 +221,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
     }
   };
 
-  // Calculate discount percentage - using nullish coalescing and proper null checks
+  // Calculate discount percentage - convert strings to numbers
   const discountPercentage =
-    selectedQuantity?.mrp && selectedQuantity.mrp > selectedQuantity.price
+    selectedQuantity?.mrp &&
+    Number(selectedQuantity.mrp) > Number(selectedQuantity.price)
       ? Math.round(
-          ((selectedQuantity.mrp - selectedQuantity.price) /
-            selectedQuantity.mrp) *
+          ((Number(selectedQuantity.mrp) - Number(selectedQuantity.price)) /
+            Number(selectedQuantity.mrp)) *
             100
         )
       : 0;
@@ -311,7 +312,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
             <div className="flex flex-col items-end gap-0.5 min-w-0 flex-1">
               {/* MRP with strikethrough */}
               {selectedQuantity?.mrp &&
-                selectedQuantity.mrp > selectedQuantity.price && (
+                Number(selectedQuantity.mrp) >
+                  Number(selectedQuantity.price) && (
                   <span className="text-[10px] sm:text-xs text-gray-500 line-through decoration-red-500 decoration-1 sm:decoration-2 whitespace-nowrap">
                     ₹{selectedQuantity.mrp}
                   </span>
