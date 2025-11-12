@@ -44,9 +44,13 @@ const Home = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
                 <Leaf className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">100% Organic</h3>
+              <h3 className="font-semibold text-lg mb-2">100% Cold Press</h3>
+              <p className="text-sm text-muted-foreground italic">
+                No Heat. No Chemicals. Just Purity.
+              </p>
               <p className="text-sm text-muted-foreground">
-                All products are certified organic and naturally sourced
+                Wholesome oils extracted through the traditional wood cold-press
+                method.
               </p>
             </div>
             <div className="text-center">
@@ -55,7 +59,8 @@ const Home = () => {
               </div>
               <h3 className="font-semibold text-lg mb-2">Quality Assured</h3>
               <p className="text-sm text-muted-foreground">
-                Rigorous quality checks ensure premium products
+                Our oils, dry fruits, and spices meet the highest standards of
+                purity and freshness.
               </p>
             </div>
             <div className="text-center">
@@ -64,7 +69,8 @@ const Home = () => {
               </div>
               <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
               <p className="text-sm text-muted-foreground">
-                Quick and secure delivery to your doorstep
+                Fast delivery across India with freshness and quality
+                guaranteed.
               </p>
             </div>
           </div>
@@ -109,8 +115,8 @@ const Home = () => {
             Experience Pure, Natural Goodness
           </h2>
           <p className="text-lg mb-8 opacity-90">
-            Join thousands of happy customers who trust us for their organic
-            needs
+            Join thousands of happy customers who trust us for their Natural,
+            Healthy Food Options
           </p>
           <Link to="/products">
             <Button size="lg" variant="secondary">

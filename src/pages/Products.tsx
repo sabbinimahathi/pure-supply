@@ -256,7 +256,16 @@ const Products = () => {
             Our Products
           </h1>
           <p className="text-lg text-green-700">
-            Explore our range of premium, eco-friendly organic products 🌱
+            Experience Premium Quality at Affordable Prices!
+          </p>
+          <br />
+          <p className="text-lg text-green-700">
+            Explore our exclusive range of health and wellness products — from
+            pure cold-pressed oils and nutritious rice varieties to rich dry
+            fruits, flavorful spices, authentic A2 Gir cow ghee, and natural
+            honey. Each product is crafted with care to bring you the perfect
+            blend of purity, taste, and health — all at affordable prices
+            without compromising on quality.
           </p>
         </div>
       </section>
