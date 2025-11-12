@@ -259,7 +259,7 @@ const Products = () => {
             Experience Premium Quality at Affordable Prices!
           </p>
           <br />
-          <p className="text-lg text-green-700">
+          <p className="text-lg text-green-700 text-justify">
             Explore our exclusive range of health and wellness products — from
             pure cold-pressed oils and nutritious rice varieties to rich dry
             fruits, flavorful spices, authentic A2 Gir cow ghee, and natural
