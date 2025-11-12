@@ -12,6 +12,7 @@ export type QuantityUnit = 'ml' | 'g' | 'kg';
 export interface QuantityOption {
   value: number;
   unit: QuantityUnit;
+  mrp: number;
   price: number;
 }
 export interface ProductImage {
