@@ -357,57 +357,18 @@ const Cart = () => {
         code: promoInput.toUpperCase(),
       });
 
-      // console.log("API Response:", res.data); // Keep for debugging
+      // Your Custom View Response:
+      // { "valid": true, "discount_type": "...", "discount_value": "..." }
+      const data = res.data;
 
-      // ---------------------------------------------------------
-      // 1. SMART PARSING: Handle List vs Object response structure
-      // ---------------------------------------------------------
-      let promoData = res.data;
+      if (data.valid === true) {
+        const dType = data.discount_type;
+        // Backend sends normalized 'discount_value', just parse it
+        const dValue = parseFloat(data.discount_value);
 
-      // If response has 'results' array (Django Pagination), take the first item
-      if (promoData.results && Array.isArray(promoData.results)) {
-        promoData = promoData.results.length > 0 ? promoData.results[0] : null;
-      } 
-      // If response is a direct array, take the first item
-      else if (Array.isArray(promoData)) {
-        promoData = promoData.length > 0 ? promoData[0] : null;
-      }
-      
-      // Check if we successfully extracted a promo object
-      if (!promoData || (!promoData.code && !promoData.id)) {
-        toast({
-            title: "Invalid or inactive promo code",
-            variant: "destructive",
-        });
-        return;
-      }
-
-      // ---------------------------------------------------------
-      // 2. EXTRACT VALUES
-      // ---------------------------------------------------------
-      const dType = promoData.discount_type; // 'percent' or 'amount'
-      const rawPercent = promoData.discount_percent;
-      const rawAmount = promoData.discount_amount;
-
-      // 3. Parse Value based on Type
-      let dValue = 0;
-      
-      if (dType === 'percent') {
-          // Prefer percent field, handle 0 or null
-          dValue = rawPercent !== null && rawPercent !== undefined 
-            ? parseFloat(rawPercent) 
-            : 0;
-      } else if (dType === 'amount') {
-          // Prefer amount field, handle 0 or null
-          dValue = rawAmount !== null && rawAmount !== undefined 
-            ? parseFloat(rawAmount) 
-            : 0;
-      }
-
-      // 4. UPDATE STORE
-      if (dValue > 0) {
+        // Use promoInput because backend response doesn't include the 'code' key
         applyPromoCode(
-            promoData.code || promoInput.toUpperCase(), 
+            promoInput.toUpperCase(), 
             dType, 
             dValue
         );
@@ -422,16 +383,16 @@ const Cart = () => {
         });
         setPromoInput("");
       } else {
-        // Fallback if logic found a code but value was 0
+        // This handles if valid: false comes back with 200 OK (rare but possible)
         toast({
-          title: "Promo code has no value",
+          title: data.message || "Invalid promo code",
           variant: "destructive",
         });
       }
-
     } catch (error: any) {
       console.error("Promo Error:", error);
-      const errMsg = error.response?.data?.message || "Invalid promo code";
+      // Handle 400 Bad Request response from your view
+      const errMsg = error.response?.data?.message || "Invalid or expired promo code";
       toast({
         title: errMsg,
         variant: "destructive",
