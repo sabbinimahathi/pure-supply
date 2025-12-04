@@ -22,7 +22,8 @@ const Cart = () => {
     removeItem,
     updateItemCount,
     promoCode,
-    discount,
+    discountType,   // NEW
+    discountValue,  // NEW
     applyPromoCode,
     removePromoCode,
     getTotalPrice,
@@ -53,10 +54,14 @@ const Cart = () => {
       });
 
       if (res.data.valid) {
-        applyPromoCode(promoInput.toUpperCase(), res.data.discount);
+        applyPromoCode(promoInput.toUpperCase(), res.data.discount, parseFloat(res.data.discount_value));
+        const discountMsg = res.data.discount_type === 'percent' 
+            ? `${res.data.discount_value}%` 
+            : `₹${res.data.discount_value}`;
+        
         toast({
           title: "Promo code applied!",
-          description: `You got ${res.data.discount}% discount`,
+          description: `You got ${discountMsg} discount`,
         });
         setPromoInput("");
       } else {
@@ -207,10 +212,13 @@ const Cart = () => {
       )
       .join("\n\n");
 
-    // Promo/discount info
-    const discountInfo = promoCode
-      ? `\nPromo Code: ${promoCode} (-${discount}%)`
-      : "";
+    let discountInfo = "";
+    if (promoCode) {
+        const discountStr = discountType === 'percent' 
+            ? `${discountValue}%` 
+            : `₹${discountValue}`;
+        discountInfo = `\nPromo Code: ${promoCode} (-${discountStr})`;
+    }
 
     // Final WhatsApp message
     const message = `Hello! I would like to order:\n\n${orderLines}${discountInfo}\n\n*Subtotal:* ₹${subtotal}\n*Total:* ₹${totalAmount.toFixed(
@@ -331,9 +339,11 @@ const Cart = () => {
                 </div>
 
                 {promoCode && (
-                  <div className="flex justify-between text-primary">
+                  <div className="flex justify-between text-primary font-medium">
                     <span>Discount ({promoCode})</span>
-                    <span>-{discount}%</span>
+                    <span>
+                        {discountType === 'percent' ? `-${discountValue}%` : `-₹${discountValue}`}
+                    </span>
                   </div>
                 )}
 
@@ -396,3 +406,4 @@ const Cart = () => {
 };
 
 export default Cart;
+
