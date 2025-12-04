@@ -303,7 +303,6 @@
 // };
 
 // export default Cart;
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
@@ -343,35 +342,50 @@ const Cart = () => {
     0
   );
 
-  // Total after discount (Handled by Store logic)
+  // Total after discount (Calculated by Store)
   const total = getTotalPrice();
 
   // -----------------------------
-  // Validate promo code from Django
+  // Validate promo code
   // -----------------------------
   const handleApplyPromo = async () => {
     if (!promoInput) return;
 
     try {
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+      // Note: Ensure your backend view returns the promo details object directly or wrapped in { data: ... }
       const res = await axios.post(`${apiBaseUrl}/api/promocodes/validate/`, {
         code: promoInput.toUpperCase(),
       });
 
-      if (res.data.valid) {
-        const dType = res.data.discount_type; // 'percent' or 'amount'
-        
-        // Determine correct value based on type (Django returns specific fields)
-        // Fallback to 0 if field is null, though backend validation should prevent this
-        const dValue = dType === 'percent' 
-            ? (res.data.discount_percent || 0)
-            : (res.data.discount_amount || 0);
+      // Check if response is valid. 
+      // If your backend returns the serializer data directly, check for 'id' or 'code'.
+      // If your backend returns { valid: true, ... }, check for 'valid'.
+      const data = res.data;
+      const isValid = data.valid === true || !!data.code;
 
-        // Store expects: (code, type, value)
+      if (isValid) {
+        const dType = data.discount_type; // 'percent' or 'amount'
+        
+        let dValue = 0;
+
+        // 1. Extract the correct value based on the type returned
+        if (dType === 'percent') {
+            // API returns integer for percent (e.g., 1)
+            dValue = parseFloat(data.discount_percent);
+        } else if (dType === 'amount') {
+            // API returns string for amount (e.g., "100.00")
+            dValue = parseFloat(data.discount_amount);
+        }
+
+        // Safety check: if parsing failed (NaN), default to 0
+        if (isNaN(dValue)) dValue = 0;
+
+        // 2. Update Store
         applyPromoCode(
-            promoInput.toUpperCase(), 
+            data.code || promoInput.toUpperCase(), // Use code from API or input
             dType, 
-            parseFloat(dValue)
+            dValue
         );
         
         const discountMsg = dType === 'percent' 
@@ -385,21 +399,22 @@ const Cart = () => {
         setPromoInput("");
       } else {
         toast({
-          title: res.data.message || "Invalid promo code",
+          title: data.message || "Invalid promo code",
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error(error);
+      console.error("Promo Error:", error);
+      // Handle 400/404 errors from backend
+      const errMsg = error.response?.data?.message || "Invalid promo code";
       toast({
-        title: "Invalid promo code",
+        title: errMsg,
         variant: "destructive",
       });
     }
   };
 
   const handleCheckout = () => {
-    // ✅ If cart is empty, show toast
     if (items.length === 0) {
       toast({
         title: "Your cart is empty!",
@@ -408,7 +423,6 @@ const Cart = () => {
       return;
     }
 
-    // Build WhatsApp order lines
     const orderLines = items
       .map(
         (item, index) =>
@@ -428,12 +442,10 @@ const Cart = () => {
         discountInfo = `\nPromo Code: ${promoCode} (-${discountStr})`;
     }
 
-    // Final WhatsApp message
     const message = `Hello! I would like to order:\n\n${orderLines}${discountInfo}\n\n*Subtotal:* ₹${subtotal}\n*Total:* ₹${total.toFixed(
       2
     )}`;
 
-    // WhatsApp URL (replace number with your WhatsApp)
     const phoneNumber = "919705947947"; 
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
       message
