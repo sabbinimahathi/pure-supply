@@ -353,37 +353,61 @@ const Cart = () => {
 
     try {
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-      // Note: Ensure your backend view returns the promo details object directly or wrapped in { data: ... }
       const res = await axios.post(`${apiBaseUrl}/api/promocodes/validate/`, {
         code: promoInput.toUpperCase(),
       });
 
-      // Check if response is valid. 
-      // If your backend returns the serializer data directly, check for 'id' or 'code'.
-      // If your backend returns { valid: true, ... }, check for 'valid'.
-      const data = res.data;
-      const isValid = data.valid === true || !!data.code;
+      // console.log("API Response:", res.data); // Keep for debugging
 
-      if (isValid) {
-        const dType = data.discount_type; // 'percent' or 'amount'
-        
-        let dValue = 0;
+      // ---------------------------------------------------------
+      // 1. SMART PARSING: Handle List vs Object response structure
+      // ---------------------------------------------------------
+      let promoData = res.data;
 
-        // 1. Extract the correct value based on the type returned
-        if (dType === 'percent') {
-            // API returns integer for percent (e.g., 1)
-            dValue = parseFloat(data.discount_percent);
-        } else if (dType === 'amount') {
-            // API returns string for amount (e.g., "100.00")
-            dValue = parseFloat(data.discount_amount);
-        }
+      // If response has 'results' array (Django Pagination), take the first item
+      if (promoData.results && Array.isArray(promoData.results)) {
+        promoData = promoData.results.length > 0 ? promoData.results[0] : null;
+      } 
+      // If response is a direct array, take the first item
+      else if (Array.isArray(promoData)) {
+        promoData = promoData.length > 0 ? promoData[0] : null;
+      }
+      
+      // Check if we successfully extracted a promo object
+      if (!promoData || (!promoData.code && !promoData.id)) {
+        toast({
+            title: "Invalid or inactive promo code",
+            variant: "destructive",
+        });
+        return;
+      }
 
-        // Safety check: if parsing failed (NaN), default to 0
-        if (isNaN(dValue)) dValue = 0;
+      // ---------------------------------------------------------
+      // 2. EXTRACT VALUES
+      // ---------------------------------------------------------
+      const dType = promoData.discount_type; // 'percent' or 'amount'
+      const rawPercent = promoData.discount_percent;
+      const rawAmount = promoData.discount_amount;
 
-        // 2. Update Store
+      // 3. Parse Value based on Type
+      let dValue = 0;
+      
+      if (dType === 'percent') {
+          // Prefer percent field, handle 0 or null
+          dValue = rawPercent !== null && rawPercent !== undefined 
+            ? parseFloat(rawPercent) 
+            : 0;
+      } else if (dType === 'amount') {
+          // Prefer amount field, handle 0 or null
+          dValue = rawAmount !== null && rawAmount !== undefined 
+            ? parseFloat(rawAmount) 
+            : 0;
+      }
+
+      // 4. UPDATE STORE
+      if (dValue > 0) {
         applyPromoCode(
-            data.code || promoInput.toUpperCase(), // Use code from API or input
+            promoData.code || promoInput.toUpperCase(), 
             dType, 
             dValue
         );
@@ -398,14 +422,15 @@ const Cart = () => {
         });
         setPromoInput("");
       } else {
+        // Fallback if logic found a code but value was 0
         toast({
-          title: data.message || "Invalid promo code",
+          title: "Promo code has no value",
           variant: "destructive",
         });
       }
-    } catch (error) {
+
+    } catch (error: any) {
       console.error("Promo Error:", error);
-      // Handle 400/404 errors from backend
       const errMsg = error.response?.data?.message || "Invalid promo code";
       toast({
         title: errMsg,
