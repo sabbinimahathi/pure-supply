@@ -49,7 +49,8 @@ ${urls
   }
 
   // Write sitemap to file
-  fs.writeFileSync("./dist/sitemap.xml", xml);
+  //fs.writeFileSync("./dist/sitemap.xml", xml);
+  fs.writeFileSync("./public/sitemap.xml", xml);
   console.log("✔ Sitemap generated successfully!");
 }
 
