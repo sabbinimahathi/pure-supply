@@ -7,7 +7,7 @@ async function generate() {
   // Fetch products from your Django API
   let products = [];
   try {
-    const res = await axios.get("https://api.puresupply.in/products/");
+    const res = await axios.get("https://api.puresupply.in/api/products/");
     products = res.data;
   } catch (err) {
     console.error("Failed to fetch products:", err);
