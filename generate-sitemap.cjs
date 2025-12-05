@@ -1,41 +1,49 @@
 const axios = require("axios");
-const { SitemapStream, streamToPromise } = require("sitemap");
-const { createWriteStream } = require("fs");
+const fs = require("fs");
 
-async function generateSitemap() {
-  const smStream = new SitemapStream({
-    hostname: "https://puresupply.in"
-  });
+async function generate() {
+  const baseUrl = "https://www.puresupply.in";
 
-  const writeStream = createWriteStream("./public/sitemap.xml");
-  smStream.pipe(writeStream);
+  // Fetch products from your Django API
+  let products = [];
+  try {
+    const res = await axios.get("https://api.puresupply.in/products/");
+    products = res.data;
+  } catch (err) {
+    console.error("Failed to fetch products:", err);
+  }
 
-  // STATIC ROUTES
-  const staticRoutes = [
-    "/", 
+  const staticPages = [
+    "",
     "/products",
     "/about",
     "/contact",
     "/faq"
   ];
-  staticRoutes.forEach((route) => smStream.write({ url: route }));
 
-  // DYNAMIC PRODUCT ROUTES
-  try {
-    const response = await axios.get("https://api.puresupply.in/api/products/");
-    const products = response.data;
+  const productPages = products.map((p) => `/product/${p.id}`);
 
-    products.forEach((product) => {
-      smStream.write({ url: `/product/${product.id}` });
-    });
-  } catch (err) {
-    console.error("Error fetching product list:", err.message);
+  const urls = [...staticPages, ...productPages];
+
+  const xml = `
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (url) => `
+  <url>
+    <loc>${baseUrl}${url}</loc>
+  </url>`
+  )
+  .join("")}
+</urlset>`.trim();
+
+  // ensure dist exists (important for Vercel)
+  if (!fs.existsSync("dist")) {
+    fs.mkdirSync("dist");
   }
 
-  smStream.end();
-  await streamToPromise(smStream);
-
-  console.log("Sitemap generated: /public/sitemap.xml");
+  fs.writeFileSync("./dist/sitemap.xml", xml);
+  console.log("✔ Sitemap generated successfully!");
 }
 
-generateSitemap();
+generate();
